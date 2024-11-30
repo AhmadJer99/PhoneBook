@@ -4,6 +4,13 @@ namespace PhoneBook.UI;
 
 internal class MainMenu
 {
+    private List<string> _menuOptions =
+        [
+            "1. View Contacts",
+            "2. Add Contact",
+            "3. Search Contact",
+            "4. Exit"
+        ];
     public int ShowMainMenu()
     {
         var userChoice = AnsiConsole.Prompt(
@@ -11,12 +18,7 @@ internal class MainMenu
         .Title("[bold green]PhoneBook[/]")
         .PageSize(10)
         .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
-        .AddChoices([
-            "1. View Contacts", // after viewing contact , i would let the user filter them later.
-            "2. Add Contact",
-            "3. Search Contact",
-            "4. Exit",
-        ]));
+        .AddChoices(_menuOptions));
 
         return GetNumericChoice(userChoice);
     }

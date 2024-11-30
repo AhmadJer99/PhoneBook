@@ -10,3 +10,4 @@ public class Contact
     public bool ContactEmailStatus { get; set; }
     public bool ContactPhoneStatus { get; set; }
 }
+

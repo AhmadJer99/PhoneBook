@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using PhoneBook.Data;
 using PhoneBook.Models;
+using NumberVerifierLibrary;
 
 namespace PhoneBook.UserInterfaceControllers;
 
@@ -8,7 +9,7 @@ internal class AddContactMenu
 {
     private Contact _newContact;
     private PhoneBookContext PhoneBookDb { get; set; }
-
+    private ValidatePhoneNumber _validatePhone;
     public AddContactMenu(PhoneBookContext phoneBookDb)
     {
         PhoneBookDb = phoneBookDb;
@@ -17,17 +18,20 @@ internal class AddContactMenu
 
     public void PromptNewContact()
     {
+        
         AnsiConsole.MarkupLine("[bold green]New Contact\n[/]");
 
         _newContact.ContactName = AnsiConsole.Ask<string>("Contact Name:");
         _newContact.ContactTitle = AnsiConsole.Ask<string>("Contact Title E.g.(Family,Work,..):");
 
         _newContact.ContactPhone = AnsiConsole.Ask<string>("Contact Phone:"); // set the new contact number status based on Number verifier 
-        _newContact.ContactPhoneStatus = true;
+        _validatePhone = new("JO", _newContact.ContactPhone);
+        _newContact.ContactPhoneStatus = _validatePhone.IsPhoneNumberValid();
 
         _newContact.ContactEmail = AnsiConsole.Ask<string>("Contact Email:"); // set the new contact email status based on email verifier
         _newContact.ContactEmailStatus = true;
 
+        
         SaveNewContact();
         IndicateAddSuccess();
     }

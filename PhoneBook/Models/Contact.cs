@@ -1,4 +1,6 @@
-﻿namespace PhoneBook.Models;
+﻿using NumberVerifierLibrary;
+
+namespace PhoneBook.Models;
 
 public class Contact
 {

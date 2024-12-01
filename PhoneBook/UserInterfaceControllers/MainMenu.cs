@@ -17,8 +17,6 @@ internal class MainMenu
         var userChoice = AnsiConsole.Prompt(
     new SelectionPrompt<string>()
         .Title("[bold green]PhoneBook[/]")
-        .PageSize(10)
-        .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
         .AddChoices(_menuOptions));
 
         return GetNumericChoice(userChoice);

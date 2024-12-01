@@ -6,11 +6,13 @@ namespace PhoneBook.UserInterfaceControllers;
 
 internal class ViewContactsMenu
 {
-    private enum _ContactOperations
+    private enum ContactOperations
     {
+        Email,
+        Text,
         Edit,
         Delete,
-        Back
+        Done
     }
 
     private PhoneBookContext PhoneBookDb { get; set; }
@@ -55,46 +57,50 @@ internal class ViewContactsMenu
 
         if (!string.IsNullOrEmpty(selectedContact.ContactEmail))
             AnsiConsole.MarkupLine($"\t[bold teal]Email: [/]{selectedContact.ContactEmail} {emailStatus}");
-
-        AnsiConsole.MarkupLine($"[bold teal]About {selectedContact.ContactName}: [/]{selectedContact.ContactTitle}\n");
+        if (!string.IsNullOrEmpty(selectedContact.ContactTitle))
+            AnsiConsole.MarkupLine($"[bold teal]About {selectedContact.ContactName}: [/]{selectedContact.ContactTitle}\n");
         PromptOptions(selectedContact);
     }
 
     public void PromptOptions(Contact selectedContact)
     {
         var userChoice = AnsiConsole.Prompt(
-            new SelectionPrompt<_ContactOperations>()
-            .AddChoices(Enum.GetValues<_ContactOperations>()));
+            new SelectionPrompt<ContactOperations>()
+            .AddChoices(Enum.GetValues<ContactOperations>()));
 
         switch (userChoice)
         {
-            case _ContactOperations.Edit:
+            case ContactOperations.Edit:
                 PromptEdit(selectedContact);
                 break;
-            case _ContactOperations.Delete:
+            case ContactOperations.Delete:
                 PromptDelete(selectedContact);
                 break;
-            case _ContactOperations.Back:
+            case ContactOperations.Done:
                 return;
         }
-        
+
     }
 
     private void PromptEdit(Contact selectedContact)
     {
-        bool doneEditing = false;
-        while (!doneEditing)
+        while (true)
         {
             var editField = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Name", "Title", "Phone", "Email", "Save Changes"]));
+            .AddChoices(["Name", "Title", "Phone", "Email", "Cancel", "Save Changes"]));
 
+            if (editField == "Cancel")
+            {
+                return;
+            }
             if (editField == "Save Changes")
             {
+                PhoneBookDb.SaveChanges();
                 Console.Clear();
                 ViewContactDetails(selectedContact);
                 IndicateSuccess();
-                return; 
+                return;
             }
             var newValue = AnsiConsole.Ask<string>($"[bold white]Enter The New {editField}[/]:");
             switch (editField)
@@ -112,13 +118,26 @@ internal class ViewContactsMenu
                     selectedContact.ContactEmail = newValue;
                     break;
             }
-            
         }
     }
 
     private void PromptDelete(Contact selectedContact)
     {
-        throw new NotImplementedException();
+        var confirmation = AnsiConsole.Prompt(
+            new ConfirmationPrompt("Any deleted contact can't be recovered are you sure?"));
+
+        if (!confirmation)
+        {
+            AnsiConsole.MarkupLine("[red]Deletetion cancelled by user.[/]\n(Press Any Key To Continue)");
+            Console.ReadKey();
+            return;
+        }
+        PhoneBookDb.Remove(selectedContact);
+        PhoneBookDb.SaveChanges();
+        IndicateSuccess();
+
+        Console.Clear();
+        ListAllContacts();
     }
 
     private void IndicateSuccess()

@@ -24,5 +24,5 @@ while (true)
         case 3:
             break;
     }
-    db.SaveChanges();
+    
 }

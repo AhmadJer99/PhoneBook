@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace PhoneBook.UI;
+namespace PhoneBook.UserInterfaceControllers;
 
 internal class MainMenu
 {
@@ -11,6 +11,7 @@ internal class MainMenu
             "3. Search Contact",
             "4. Exit"
         ];
+
     public int ShowMainMenu()
     {
         var userChoice = AnsiConsole.Prompt(

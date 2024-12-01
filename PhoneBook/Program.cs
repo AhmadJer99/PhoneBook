@@ -1,5 +1,5 @@
 ﻿using PhoneBook.Data;
-using PhoneBook.UI;
+using PhoneBook.UserInterfaceControllers;
 
 MainMenu mainMenu = new MainMenu();
 while (true)
@@ -14,6 +14,8 @@ while (true)
     switch (choice)
     {
         case 1:
+            ViewContactsMenu viewContactsMenu = new(db);
+            viewContactsMenu.ListAllContacts();
             break;
         case 2:
             AddContactMenu addContactMenu = new(db);

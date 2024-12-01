@@ -2,7 +2,7 @@
 using PhoneBook.Data;
 using PhoneBook.Models;
 
-namespace PhoneBook.UI;
+namespace PhoneBook.UserInterfaceControllers;
 
 internal class AddContactMenu
 {

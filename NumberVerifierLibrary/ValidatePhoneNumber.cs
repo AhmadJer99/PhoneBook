@@ -19,7 +19,12 @@ public class ValidatePhoneNumber
             AnsiConsole.MarkupLine("[red]Invalid Phone Number-No characters allowed in the phone number![/]");
             return false;
         }
-        if (_phoneNumber.Length < 3 | _phoneNumber.Length > 17) // the only allowed range for any phone number
+        if (_phoneNumber.Length < 3 ) // the only allowed range for any phone number
+        {
+            AnsiConsole.MarkupLine("[red]Invalid Phone Number-The entered number is below the allowed length![/]");
+            return false;
+        }
+        if ( _phoneNumber.Length > 17) 
         {
             AnsiConsole.MarkupLine("[red]Invalid Phone Number-The entered number exceeds the allowed length![/]");
             return false;

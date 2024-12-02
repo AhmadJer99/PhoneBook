@@ -2,6 +2,7 @@
 using PhoneBook.Data;
 using PhoneBook.Models;
 using NumberVerifierLibrary;
+using EmailVerifierLibrary;
 
 namespace PhoneBook.UserInterfaceControllers;
 
@@ -28,7 +29,7 @@ internal class AddContactMenu
         _newContact.ContactPhoneStatus = VerifiyPhoneNumber(countryCode);
 
         _newContact.ContactEmail = AnsiConsole.Ask<string>("Contact Email:");
-        _newContact.ContactEmailStatus = true;
+        _newContact.ContactEmailStatus = VerifiyEmail();
 
 
         SaveNewContact();
@@ -41,11 +42,30 @@ internal class AddContactMenu
 
         if (!validatePhone.IsPhoneNumberFormatValid()) // if the format isnt valid instantly invalidate the number and set status as unverified
             return false;
-            
+
         // if the format was valid , then check for the api if the number really exists and set the status accordingly
-        string verification = validatePhone.IsPhoneNumberValid() ? "[green]Valid[/]" : "[red]Invalid[/]";
+        bool validNumber = validatePhone.IsPhoneNumberValid();
+        string verification = validNumber  ? "[green]Valid[/]" : "[red]Invalid[/]";
         AnsiConsole.MarkupLine($"This number {_newContact.ContactPhone} is {verification}");
-        return validatePhone.IsPhoneNumberValid();
+
+        return validNumber;
+    }
+    private bool VerifiyEmail()
+    {
+        var validateEmail = new ValidateEmailAddress(_newContact.ContactEmail);
+
+        if (!validateEmail.IsEmailAddressFormatValid()) // if the format isnt valid instantly invalidate the email and set status as unverified
+            return false;
+
+        // check for typo and correct if a typo was found and prompt the user if he wants the correction to be done
+        var correctedEmail = validateEmail.CheckEmailPossibleTypoFix();
+        if (!string.IsNullOrEmpty(correctedEmail))
+            _newContact.ContactEmail = correctedEmail;
+
+        var confidenceScore = validateEmail.GetEmailAddressValidConfidenceScore();
+        if ((confidenceScore > 0.4) && (validateEmail.EmailCanRecieveMail()))
+            return true;
+        return false;
     }
 
     private void SaveNewContact()

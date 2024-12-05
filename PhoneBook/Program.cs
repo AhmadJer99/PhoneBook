@@ -1,7 +1,7 @@
 ﻿using PhoneBook.Data;
 using PhoneBook.UserInterfaceControllers;
 
-MainMenu mainMenu = new MainMenu();
+MainMenu mainMenu = new();
 while (true)
 {
     Console.Clear();
@@ -15,7 +15,7 @@ while (true)
     {
         case 1:
             ViewContactsMenu viewContactsMenu = new(db);
-            viewContactsMenu.ListAllContacts();
+            await viewContactsMenu.ListAllContactsAsync();
             break;
         case 2:
             AddContactMenu addContactMenu = new(db);
@@ -24,5 +24,4 @@ while (true)
         case 3:
             break;
     }
-    
 }

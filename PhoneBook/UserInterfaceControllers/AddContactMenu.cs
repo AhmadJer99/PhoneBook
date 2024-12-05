@@ -75,7 +75,8 @@ internal class AddContactMenu
 
     private void IndicateAddSuccess()
     {
-        AnsiConsole.MarkupLine("\n[green]Contact Added Successfully!\n[/](Press Any Key To Continue)");
-        Console.ReadKey();
+        AnsiConsole.MarkupLine("\n[green]Contact added successfully![/]");
+        AnsiConsole.MarkupLine("(Press Enter to continue)");
+        Console.ReadLine();
     }
 }

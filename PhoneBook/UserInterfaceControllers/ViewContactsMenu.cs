@@ -20,7 +20,7 @@ internal class ViewContactsMenu
         PhoneBookDb = phoneBookDb;
     }
 
-    public void ListAllContacts()
+    public async Task ListAllContactsAsync()
     {
         AnsiConsole.MarkupLine("[bold green]Contacts\n[/]");
 
@@ -40,10 +40,11 @@ internal class ViewContactsMenu
 
         if (selectedContact.ContactName == "[gray]Back[/]")
         { return; }
-        ViewContactDetails(selectedContact);
+        FormattedViewContactDetails(selectedContact);
+        await PromptOptionsAsync(selectedContact);
     }
 
-    private void ViewContactDetails(Contact selectedContact)
+    private void FormattedViewContactDetails(Contact selectedContact)
     {
 
         string phoneStatus = selectedContact.ContactPhoneStatus ? "[green]-Verified[/]" : "[red]-Unverified[/]";
@@ -57,10 +58,9 @@ internal class ViewContactsMenu
             AnsiConsole.MarkupLine($"\t[bold teal]Email: [/]{selectedContact.ContactEmail} {emailStatus}");
         if (!string.IsNullOrEmpty(selectedContact.ContactTitle))
             AnsiConsole.MarkupLine($"[bold teal]About {selectedContact.ContactName}: [/]{selectedContact.ContactTitle}\n");
-        PromptOptions(selectedContact);
     }
 
-    public void PromptOptions(Contact selectedContact)
+    public async Task PromptOptionsAsync(Contact selectedContact)
     {
         var userChoice = AnsiConsole.Prompt(
             new SelectionPrompt<ContactOperations>()
@@ -69,10 +69,10 @@ internal class ViewContactsMenu
         switch (userChoice)
         {
             case ContactOperations.Edit:
-                PromptEdit(selectedContact);
+                await PromptEditAsync(selectedContact);
                 break;
             case ContactOperations.Delete:
-                PromptDelete(selectedContact);
+                await PromptDeleteAsync(selectedContact);
                 break;
             case ContactOperations.Done:
                 return;
@@ -80,7 +80,7 @@ internal class ViewContactsMenu
 
     }
 
-    private void PromptEdit(Contact selectedContact)
+    private async Task PromptEditAsync(Contact selectedContact)
     {
         while (true)
         {
@@ -94,9 +94,9 @@ internal class ViewContactsMenu
             }
             if (editField == "Save Changes")
             {
-                PhoneBookDb.SaveChanges();
+                await PhoneBookDb.SaveChangesAsync();
                 Console.Clear();
-                ViewContactDetails(selectedContact);
+                FormattedViewContactDetails(selectedContact);
                 IndicateSuccess();
                 return;
             }
@@ -119,7 +119,7 @@ internal class ViewContactsMenu
         }
     }
 
-    private void PromptDelete(Contact selectedContact)
+    private async Task PromptDeleteAsync(Contact selectedContact)
     {
         var confirmation = AnsiConsole.Prompt(
             new ConfirmationPrompt("Any deleted contact can't be recovered are you sure?"));
@@ -131,16 +131,17 @@ internal class ViewContactsMenu
             return;
         }
         PhoneBookDb.Remove(selectedContact);
-        PhoneBookDb.SaveChanges();
+        await PhoneBookDb.SaveChangesAsync();
         IndicateSuccess();
 
         Console.Clear();
-        ListAllContacts();
+        await ListAllContactsAsync();
     }
 
     private void IndicateSuccess()
     {
-        AnsiConsole.MarkupLine("\n[green]Operation executed succesfully![/]\n(Press Any Key To Continue)");
-        Console.ReadKey();
+        AnsiConsole.MarkupLine("\n[green]Operation executed successfully![/]");
+        AnsiConsole.MarkupLine("(Press Enter to continue)");
+        Console.ReadLine(); 
     }
 }

@@ -6,7 +6,7 @@ while (true)
 {
     Console.Clear();
     var choice = mainMenu.ShowMainMenu();
-    if (choice == 4)
+    if (choice == 3)
 
     { break; }
 
@@ -20,8 +20,6 @@ while (true)
         case 2:
             AddContactMenu addContactMenu = new(db);
             await addContactMenu.PromptNewContact();
-            break;
-        case 3:
             break;
     }
 }

@@ -1,6 +1,6 @@
 # PhoneBook
  ![contact-us](https://github.com/user-attachments/assets/adc5ea58-09c7-4eb5-a74c-077842bd57a5)
-- ***A very simple Phone Book console application using the most popular ORM Entity Framework (EF)***
+### A very simple Phone Book console application using the most popular ORM Entity Framework (EF)
 
 # Requirments
 - Application should record contacts with their phone numbers.
@@ -15,3 +15,12 @@
 - [Code sample using EF core on Github](https://github.com/entityframeworktutorial/EF6-Code-First-Demo)
 - [What is Code-First apporach?](https://www.entityframeworktutorial.net/code-first/what-is-code-first.aspx)
 - [Setting up my connection string in the App.Config](https://learn.microsoft.com/en-us/ef/core/miscellaneous/connection-strings?tabs=vs)
+# Build Instructions
+- Change the connection strings to your specified Sql server instance , and desired database name in the App.Config Xml file.
+- Make sure to use the command Add-Migration <YOUR MIGRATION NAME> in the PMC.
+- Run Update-Database in PMC.
+- Make sure to provide Api Keys for the Email Verifier and phone verifier in their respective App.Config files.
+- You can get Api keys for those services through these
+   - [NumVerifiy](https://numverify.com/) You can sign up for free and get a free Api key and have 100 requests per month allowance
+   - [EmailVerifiy](https://mailboxlayer.com/) You can sign up for free and get a free Api key and have 100 requests per month allowance
+ ### Note: I left my Api keys in the app configs so you can use it to test the app, but theres a limit on its usage because they are free keys.

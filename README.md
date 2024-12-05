@@ -11,7 +11,6 @@
 - Code should be done using Code-First Approach, which means EF will create the database schema.
 - Code should use SQL Server, not SQLite
 # Resources
-## Resources used in order to complete this app
 - [EF introduction using MS docs for EF.](https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli)
 - [Code sample using EF core on Github](https://github.com/entityframeworktutorial/EF6-Code-First-Demo)
 - [What is Code-First apporach?](https://www.entityframeworktutorial.net/code-first/what-is-code-first.aspx)

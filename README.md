@@ -16,6 +16,7 @@
 - [Code sample using EF core on Github](https://github.com/entityframeworktutorial/EF6-Code-First-Demo)
 - [What is Code-First apporach?](https://www.entityframeworktutorial.net/code-first/what-is-code-first.aspx)
 - [Setting up my connection string in the App.Config](https://learn.microsoft.com/en-us/ef/core/miscellaneous/connection-strings?tabs=vs)
+- [Async Guidance By David Fowler](https://github.com/davidfowl/AspNetCoreDiagnosticScenarios/blob/master/AsyncGuidance.md)
   
 # Build Instructions
 - Change the connection strings to your specified Sql server instance , and desired database name in the App.Config Xml file.
@@ -38,15 +39,18 @@
 - If the user chose to edit the contact he can edit any field he wants.
   - ![image](https://github.com/user-attachments/assets/304353dd-c8ab-4562-8695-f44d004a1c03)
   - ![image](https://github.com/user-attachments/assets/8d7a9205-ba40-4f5c-947c-ffab9b4d69dd)
-  - After the user is done editing the contact he can choose to cancel any changes or save changes,and will be shown the edited contact details
+  - After the user is done editing the contact he can choose to cancel any changes or save changes,and will be shown the edited contact details.
   - ![image](https://github.com/user-attachments/assets/c45f0e7f-2fdf-4e13-be81-2096bbe15ce5)
-- If the user chose to delete te contact, 
-   - User will be prompted with a confirmation if he really wants to delete that contact permanently
+- If the user chose to delete te contact.
+   - User will be prompted with a confirmation if he really wants to delete that contact permanently.
    - ![image](https://github.com/user-attachments/assets/b53dc505-62c1-4264-a41c-71609f2ca35f)
 
+# Lessons Learned
+- I learnt how to implement async methods correctly.
+- I learnt how to use Code-First approach with EF core creating the schema for me.
+- I learnt how to do basic CRUD operations with EF.
 
-
-
-  
-
-
+# Future Imrpovement 🚀
+- I think I still need to be more consistent with my code regarding how i define variables and how I do external projects.
+- I need some work applying more design patterns more efficiently without killing the code readability.
+- I need to untie my code even better and apply better SoC througout my project.

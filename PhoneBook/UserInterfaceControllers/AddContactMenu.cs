@@ -9,7 +9,7 @@ namespace PhoneBook.UserInterfaceControllers;
 internal class AddContactMenu
 {
     private const double EmailConfidenceThreshold = 0.4;
-    private Contact _newContact;
+    private readonly Contact _newContact;
     private PhoneBookContext PhoneBookDb { get; set; }
     public AddContactMenu(PhoneBookContext phoneBookDb)
     {

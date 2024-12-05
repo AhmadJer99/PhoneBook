@@ -6,12 +6,13 @@ public class ValidatePhoneNumber
 {
     private readonly string? _countryCode;
     private readonly string? _phoneNumber;
-    private ValidatedPhoneNumber? _numberDetails;
+
     public ValidatePhoneNumber(string countryCode, string phoneNumber)
     {
         _countryCode = countryCode;
         _phoneNumber = phoneNumber;
     }
+
     public bool IsPhoneNumberFormatValid()
     {
         if (!double.TryParse(_phoneNumber, out double _))

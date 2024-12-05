@@ -77,7 +77,6 @@ internal class ViewContactsMenu
             case ContactOperations.Done:
                 return;
         }
-
     }
 
     private async Task PromptEditAsync(Contact selectedContact)

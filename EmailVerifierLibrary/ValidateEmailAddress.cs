@@ -6,10 +6,12 @@ public class ValidateEmailAddress
 {
     private string? _emailAddress;
     private ValidatedEmailAddress? _emailDetails;
+
     public ValidateEmailAddress(string emailAddress)
     {
         _emailAddress = emailAddress;
     }
+
     public async Task InitializeAsync()
     {
         await LoadEmailDetailsAsync();

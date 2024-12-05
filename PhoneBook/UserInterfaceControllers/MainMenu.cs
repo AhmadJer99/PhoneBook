@@ -4,7 +4,7 @@ namespace PhoneBook.UserInterfaceControllers;
 
 internal class MainMenu
 {
-    private List<string> _menuOptions =
+    private readonly List<string> _menuOptions =
         [
             "1. View Contacts",
             "2. Add Contact",

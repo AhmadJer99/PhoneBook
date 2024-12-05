@@ -17,5 +17,4 @@ internal class PhoneBookContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         => base.OnConfiguring(optionsBuilder.UseSqlServer(_connectionString));
-
 }

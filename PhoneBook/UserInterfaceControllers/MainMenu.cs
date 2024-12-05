@@ -8,7 +8,7 @@ internal class MainMenu
         [
             "1. View Contacts",
             "2. Add Contact",
-            "4. Exit"
+            "3. Exit"
         ];
 
     public int ShowMainMenu()
@@ -25,7 +25,7 @@ internal class MainMenu
     {
         "1. View Contacts" => 1,
         "2. Add Contact" => 2,
-        "4. Exit" => 3,
+        "3. Exit" => 3,
         _ => throw new InvalidOperationException("Invalid choice selected.")
     };
 }

@@ -8,49 +8,51 @@ public class ValidateEmailAddress
     private ValidatedEmailAddress? _emailDetails;
     public ValidateEmailAddress(string emailAddress)
     {
-        _emailAddress =  emailAddress;
-        var task = LoadPhoneDetails();
-        task.Wait();
+        _emailAddress = emailAddress;
+    }
+    public async Task InitializeAsync()
+    {
+        await LoadEmailDetailsAsync();
     }
 
     public bool IsEmailAddressFormatValid()
     {
-        return _emailDetails.IsFormatValid;
+        return _emailDetails?.IsFormatValid ?? false;
     }
+
     public double GetEmailAddressValidConfidenceScore()
     {
-        return _emailDetails.Confidence;
+        return _emailDetails?.Confidence ?? 0.0;
     }
+
     public bool EmailCanRecieveMail()
     {
-        return _emailDetails.MxCheck;
+        return _emailDetails?.MxCheck ?? false;
     }
-    public string CheckEmailPossibleTypoFix()
+
+    public async Task<string> CheckEmailPossibleTypoFixAsync()
     {
-        if (!string.IsNullOrWhiteSpace(_emailDetails.CorrectedEmail))
+        if (string.IsNullOrWhiteSpace(_emailDetails?.CorrectedEmail))
+            return "";
+
+        AnsiConsole.Markup($"[yellow]Did you mean -{_emailDetails.CorrectedEmail}? [/]");
+        while (true)
         {
-            AnsiConsole.Markup($"[yellow]Did you mean -{_emailDetails.CorrectedEmail}? [/]");
+            var userChoice = AnsiConsole.Ask<string>("(Y/N)");
 
-            while(true)
+            if (userChoice.Equals("y", StringComparison.CurrentCultureIgnoreCase))
             {
-                var userChoice = AnsiConsole.Ask<string>("(Y/N)");
-
-                if (userChoice.ToLower() == "y")
-                {
-                    _emailAddress = _emailDetails.CorrectedEmail;
-                    var task = LoadPhoneDetails();
-                    task.Wait();
-                    return _emailDetails.CorrectedEmail;
-                }
-                if (userChoice.ToLower() == "n")
-                    return "";
-                AnsiConsole.MarkupLine("[red]Invalid Choice![/]");
+                _emailAddress = _emailDetails.CorrectedEmail;
+                await LoadEmailDetailsAsync();
+                return _emailDetails.CorrectedEmail;
             }
+            if (userChoice.Equals("n", StringComparison.CurrentCultureIgnoreCase))
+                return "";
+            AnsiConsole.MarkupLine("[red]Invalid Choice![/]");
         }
-        return "";
     }
 
-    private async Task LoadPhoneDetails()
+    private async Task LoadEmailDetailsAsync()
     {
         HttpRequestCreator httpRequestCreator = new();
         var client = httpRequestCreator.CreateHttpClient();

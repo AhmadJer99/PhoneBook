@@ -8,8 +8,6 @@ internal class ViewContactsMenu
 {
     private enum ContactOperations
     {
-        Email,
-        Text,
         Edit,
         Delete,
         Done

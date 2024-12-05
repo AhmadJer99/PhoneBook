@@ -8,6 +8,7 @@ namespace PhoneBook.UserInterfaceControllers;
 
 internal class AddContactMenu
 {
+    private const double EmailConfidenceThreshold = 0.4;
     private Contact _newContact;
     private PhoneBookContext PhoneBookDb { get; set; }
     public AddContactMenu(PhoneBookContext phoneBookDb)
@@ -16,7 +17,7 @@ internal class AddContactMenu
         _newContact = new Contact();
     }
 
-    public void PromptNewContact()
+    public async Task PromptNewContact()
     {
 
         AnsiConsole.MarkupLine("[bold green]New Contact\n[/]");
@@ -26,52 +27,50 @@ internal class AddContactMenu
 
         _newContact.ContactPhone = AnsiConsole.Ask<string>("Contact Phone Without Country Prefix:");
         var countryCode = AnsiConsole.Ask<string>("Country Code (First two letters of your country name -Jordan = JO, United States = US)\nIF YOU ARE HAVING TROUBLE KNOWING YOUR COUNTRY CODE look it up on google:");
-        _newContact.ContactPhoneStatus = VerifiyPhoneNumber(countryCode);
+        _newContact.ContactPhoneStatus = await VerifiyPhoneNumber(countryCode);
 
         _newContact.ContactEmail = AnsiConsole.Ask<string>("Contact Email:");
-        _newContact.ContactEmailStatus = VerifiyEmail();
+        _newContact.ContactEmailStatus = await VerifiyEmail();
 
-
-        SaveNewContact();
+        await SaveNewContactAsync();
         IndicateAddSuccess();
     }
 
-    private bool VerifiyPhoneNumber(string countryCode)
+    private async Task<bool> VerifiyPhoneNumber(string countryCode)
     {
         var validatePhone = new ValidatePhoneNumber(countryCode, _newContact.ContactPhone);
 
-        if (!validatePhone.IsPhoneNumberFormatValid()) // if the format isnt valid instantly invalidate the number and set status as unverified
+        if (!validatePhone.IsPhoneNumberFormatValid())
             return false;
 
-        // if the format was valid , then check for the api if the number really exists and set the status accordingly
-        bool validNumber = validatePhone.IsPhoneNumberValid();
-        string verification = validNumber  ? "[green]Valid[/]" : "[red]Invalid[/]";
-        AnsiConsole.MarkupLine($"This number {_newContact.ContactPhone} is {verification}");
+        bool isValid = await validatePhone.IsPhoneNumberValidAsync();
+        string status = isValid ? "[green]Valid[/]" : "[red]Invalid[/]";
+        AnsiConsole.MarkupLine($"This number {_newContact.ContactPhone} is {status}");
 
-        return validNumber;
+        return isValid;
     }
-    private bool VerifiyEmail()
+    private async Task<bool> VerifiyEmail()
     {
         var validateEmail = new ValidateEmailAddress(_newContact.ContactEmail);
+        await validateEmail.InitializeAsync();
 
-        if (!validateEmail.IsEmailAddressFormatValid()) // if the format isnt valid instantly invalidate the email and set status as unverified
+        if (!validateEmail.IsEmailAddressFormatValid())
             return false;
 
-        // check for typo and correct if a typo was found and prompt the user if he wants the correction to be done
-        var correctedEmail = validateEmail.CheckEmailPossibleTypoFix();
+        var correctedEmail = await validateEmail.CheckEmailPossibleTypoFixAsync();
         if (!string.IsNullOrEmpty(correctedEmail))
             _newContact.ContactEmail = correctedEmail;
 
         var confidenceScore = validateEmail.GetEmailAddressValidConfidenceScore();
-        if ((confidenceScore > 0.4) && (validateEmail.EmailCanRecieveMail()))
+        if ((confidenceScore > EmailConfidenceThreshold) && (validateEmail.EmailCanRecieveMail()))
             return true;
         return false;
     }
 
-    private void SaveNewContact()
+    private async Task SaveNewContactAsync()
     {
-        PhoneBookDb.Add(_newContact);
-        PhoneBookDb.SaveChanges();
+        await PhoneBookDb.AddAsync(_newContact);
+        await PhoneBookDb.SaveChangesAsync();
     }
 
     private void IndicateAddSuccess()

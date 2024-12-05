@@ -19,7 +19,7 @@ while (true)
             break;
         case 2:
             AddContactMenu addContactMenu = new(db);
-            addContactMenu.PromptNewContact();
+            await addContactMenu.PromptNewContact();
             break;
         case 3:
             break;
